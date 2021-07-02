@@ -14,15 +14,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
 */
+#include "Hand.hpp"
+#include "Board.hpp"
+
 #include <Arduboy2.h>
-#include <Sprites.h>
 #include <string.h>
 
-#include "blackdice.h"
-#include "whitedice.h"
-#include "cursor.h"
-
 Arduboy2 arduboy;
+Hand hand;
+Board board;
 
 void setup() {
   arduboy.begin();
@@ -30,27 +30,14 @@ void setup() {
   //~ arduboy.setFrameRate(15);
 }
 
-int cursx = 0;
-int cursy = 0;
-
-const int minx = 0;
-const int maxx = 9;
-const int miny = 0;
-const int maxy = 4;
-
-void move_cursor()
+void user_action()
 {
     arduboy.pollButtons();
     
-    if (arduboy.justPressed(UP_BUTTON)) cursy--;
-    if (arduboy.justPressed(DOWN_BUTTON)) cursy++;
-    if (arduboy.justPressed(LEFT_BUTTON)) cursx--;
-    if (arduboy.justPressed(RIGHT_BUTTON)) cursx++;
-    
-    if (cursy < miny) cursy = miny;
-    if (cursy > maxy) cursy = maxy;
-    if (cursx < minx) cursx = minx;
-    if (cursx > maxx) cursx = maxx;
+    if (arduboy.justPressed(UP_BUTTON)) hand.up();
+    if (arduboy.justPressed(DOWN_BUTTON)) hand.down();
+    if (arduboy.justPressed(LEFT_BUTTON)) hand.left();
+    if (arduboy.justPressed(RIGHT_BUTTON)) hand.right();
 }
 
 /* Full display resolution is 128 x 64
@@ -58,14 +45,8 @@ void move_cursor()
 void draw_display()
 {
     arduboy.clear();
-    
-    for (int i = 0; i < 6; i++)
-    {
-        Sprites::drawOverwrite(i * 12, 12, blackdice, i);
-        Sprites::drawOverwrite(i * 12, 24, whitedice, i);
-    }
-
-    Sprites::drawPlusMask(cursx * 12, cursy * 12, cursor, 0);
+    board.draw();
+    hand.draw();
 }
 
 /* Also reminder: F() macro is to convert string constant from flash */
@@ -74,7 +55,7 @@ void loop() {
     if (!(arduboy.nextFrame()))
         return;
 
-    move_cursor();
+    user_action();
     draw_display();
     arduboy.display();
 }
