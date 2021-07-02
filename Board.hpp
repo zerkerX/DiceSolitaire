@@ -38,4 +38,57 @@ public:
             }
         }
     }
+    
+    /** Copies the data from the indicated position and to the right
+     * of it into the outarr.
+     * Assumes outarray is at least NUMCOL in size, and that it is
+     * initially filled with EMPTY prior to calling this function.
+     * */
+    void grab(int col, int row, Dice * outarr)
+    {
+        for (int pos = 0; pos < NUMCOL && pos + col < NUMCOL; pos++)
+        {
+            outarr[pos] = contents[row][col + pos];
+            contents[row][col + pos] = EMPTY;
+        }
+    }
+
+    /** Copies the data from the input array to the indicated position
+     * on the board.
+     * Assumes inarray is at least NUMCOL in size.
+     * 
+     * Returns true if the placement is valid, false otherwise */
+    bool place(int col, int row, Dice * inarr)
+    {
+        /* Count the number of items in the hand */
+        int handsize = NUMCOL;
+        for (int pos = 0; pos < NUMCOL; pos++)
+        {
+            if (inarr[pos] == EMPTY)
+            {
+                handsize = pos;
+                break;
+            }
+        }
+        
+        /* Copy the data into the board, if the placement is valid */
+        if (   contents[row][col] == EMPTY
+            && handsize > 0
+            && handsize + col < NUMCOL
+            && (   col == 0 
+                || contents[row][col - 1] == dice_prev_stack(inarr[0])))
+        {
+            for (int pos = 0; pos <= handsize; pos++)
+            {
+                contents[row][col + pos] = inarr[pos];
+                inarr[pos] = EMPTY;
+            }
+            
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 };

@@ -38,10 +38,11 @@ void user_action()
     if (arduboy.justPressed(DOWN_BUTTON)) hand.down();
     if (arduboy.justPressed(LEFT_BUTTON)) hand.left();
     if (arduboy.justPressed(RIGHT_BUTTON)) hand.right();
+
+    if (arduboy.justPressed(A_BUTTON)) hand.grab(board);
 }
 
-/* Full display resolution is 128 x 64
- * Font size (if I use it) is 6 x 8 pixels */
+
 void draw_display()
 {
     arduboy.clear();
@@ -50,7 +51,6 @@ void draw_display()
 }
 
 /* Also reminder: F() macro is to convert string constant from flash */
-
 void loop() {
     if (!(arduboy.nextFrame()))
         return;
