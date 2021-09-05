@@ -49,7 +49,7 @@ public:
     void down()
     {
         y++;
-        if (y > NUMROW) y = NUMROW;
+        if (y > NUMROW - 1) y = NUMROW - 1;
     }
     
     void left()
@@ -61,7 +61,7 @@ public:
     void right()
     {
         x++;
-        if (x > NUMCOL) x = NUMCOL;
+        if (x > NUMCOL - 1) x = NUMCOL - 1;
     }
     
     void grab(Board & board)
