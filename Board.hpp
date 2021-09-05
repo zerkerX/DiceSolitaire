@@ -2,6 +2,8 @@
 #include "limits.h"
 #include "blackdice.h"
 #include "whitedice.h"
+#include "blackcollapsed.h"
+#include "whitecollapsed.h"
 
 #include <Sprites.h>
 #include "Dice.hpp"
@@ -27,6 +29,19 @@ protected:
         return handsize;
     }
     
+    /* Fully deletes the die at a given position, shifting all others
+     * to the left */
+    void delete_pos(int delpos, int row)
+    {
+        for (int pos = delpos; pos < NUMCOL - 1; pos++)
+        {
+            contents[row][pos] = contents[row][pos + 1];
+        }
+        contents[row][NUMCOL - 1] = EMPTY;
+    }
+    
+    /* TODO InsertPos function too */
+    
 public:
     Board()
     {
@@ -51,6 +66,12 @@ public:
                 else if (value >= BLACK_1 && value <= BLACK_6)
                     Sprites::drawOverwrite(col * 12, row * 12, 
                             blackdice, value - BLACK_1);
+                else if (value >= BLACK_COL_2 && value <= BLACK_COL_6)
+                    Sprites::drawOverwrite(col * 12, row * 12, 
+                            blackcollapsed, 0);
+                else if (value >= WHITE_COL_2 && value <= WHITE_COL_6)
+                    Sprites::drawOverwrite(col * 12, row * 12, 
+                            whitecollapsed, 0);
             }
         }
     }
@@ -59,6 +80,7 @@ public:
      * of it into the outarr.
      * Assumes outarray is at least NUMCOL in size, and that it is
      * initially filled with EMPTY prior to calling this function.
+     * TODO: Do not permit grabs including completed sets!
      * */
     void grab(int col, int row, Dice * outarr)
     {
@@ -149,5 +171,38 @@ public:
         /* If somehow fully filled (shouldn't be possible?), just
          * return the last column. */
          return NUMCOL - 1;
+    }
+    
+    /* Checks and completes matches, with a brief animation to collapse
+     * then down to a single square */
+    void check_matches()
+    {
+        Dice value;
+        for (int row = 0; row < NUMROW; row++)
+        {
+            for (int col = 0; col < NUMCOL; col++)
+            {
+                value = contents[row][col];
+                if ((value == WHITE_6 || value == BLACK_6) && col < NUMCOL - 6)
+                {
+                    next_matches(row, col + 1, value);
+                }
+            }
+        }
+    }
+    
+    void next_matches(int row, int col, Dice prev_value)
+    {
+        Dice value;
+        value = contents[row][col];
+        if (dice_end_stack(value) == prev_value)
+        {
+            delete_pos(row, col);
+            contents[row][col - 1] = dice_get_end_version(prev_value);
+        }
+        else if (dice_prev_stack(value) == prev_value)
+        {
+            next_matches(row, col + 1, value);
+        }
     }
 };

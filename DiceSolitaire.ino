@@ -68,6 +68,7 @@ void loop() {
 
     user_action();
     hand.gravity(board);
+    board.check_matches();
     draw_display();
     arduboy.display();
 }
