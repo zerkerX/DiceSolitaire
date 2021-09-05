@@ -91,4 +91,43 @@ public:
             return false;
         }
     }
+    
+    /** Gravity function in grabbing mode. Force the cursor to stay
+     * within the populated region, unless the column is fully empty.
+     * In that case, it should be on the first column. */
+    int gravity_grab(int col, int row)
+    {
+        if (contents[row][col] == EMPTY)
+        {
+            for (int pos = col; pos >= 0; pos--)
+            {
+                if (contents[row][pos] != EMPTY)
+                {
+                    return pos;
+                }
+            }
+                
+            /* If the search failed, all columns are empty, so 
+             * return zero. */
+            return 0;
+        }
+        else return col; /* Position still valid */
+    }
+    
+    /** Gravity function for placement mode. Always select the next
+     * blank cell in the current row */
+    int gravity_place(int col, int row)
+    {
+        for (int pos = 0; pos < NUMCOL; pos++)
+        {
+            if (contents[row][pos] == EMPTY)
+            {
+                return pos;
+            }
+        }
+        
+        /* If somehow fully filled (shouldn't be possible?), just
+         * return the last column. */
+         return NUMCOL - 1;
+    }
 };

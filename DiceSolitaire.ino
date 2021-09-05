@@ -1,18 +1,18 @@
 /*
-This file is part of MPDControl.
+This file is part of DiceSolitaire.
 
-MPDControl is free software: you can redistribute it and/or modify
+DiceSolitaire is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-Foobar is distributed in the hope that it will be useful,
+DiceSolitaire is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
+along with DiceSolitaire.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include "Hand.hpp"
 #include "Board.hpp"
@@ -23,6 +23,18 @@ along with Foobar.  If not, see <https://www.gnu.org/licenses/>.
 Arduboy2 arduboy;
 Hand hand;
 Board board;
+
+/* Primary TODO list:
+ * - "Put back" support, to prevent getting stuck holding something
+ *   with no moves.
+ * - Collapsing properly sorted sets
+ * - Shuffled initial state
+ * - A main menu and means to exit back to it
+ * - Recognize when puzzle is complete.
+ * >> Minimum viable game!
+ * - Fixed set of puzzles? Or maybe just choose number of dice sets?
+ */ 
+
 
 void setup() {
   arduboy.begin();
@@ -56,6 +68,7 @@ void loop() {
         return;
 
     user_action();
+    hand.gravity(board);
     draw_display();
     arduboy.display();
 }

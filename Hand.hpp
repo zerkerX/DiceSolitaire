@@ -76,4 +76,18 @@ public:
             if (board.place(x, y, holding)) empty = true;
         }
     }
+    
+    /** Restricts the cursor position based on board conents so we don't
+     * need to cursor in and out of blank spaces */
+    void gravity(const Board & board)
+    {
+        if (empty)
+        {
+            x = board.gravity_grab(x, y);
+        }
+        else
+        {
+            x = board.gravity_place(x, y);
+        }
+    }
 };
