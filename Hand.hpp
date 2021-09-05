@@ -11,6 +11,7 @@ class Hand
 {
 protected:
     int x = 0, y = 0;
+    int grab_x = 0, grab_y = 0;
     bool empty = true;
     Dice holding[NUMCOL] = {EMPTY};
     
@@ -69,11 +70,33 @@ public:
         if (empty)
         {
             board.grab(x, y, holding);
-            if (holding[0] != EMPTY) empty = false;
+            if (holding[0] != EMPTY)
+            {
+                grab_x = x;
+                grab_y = y;
+                empty = false;
+            }
         }
         else
         {
-            if (board.place(x, y, holding)) empty = true;
+            if (board.place(x, y, holding))
+            {
+                empty = true;
+                grab_x = 0;
+                grab_y = 0;
+            }
+        }
+    }
+    
+    void put_back(Board & board)
+    {
+        /* We can only put back if we are holding anything */
+        if (!empty)
+        {
+            board.put_back(grab_x, grab_y, holding);
+            empty = true;
+            grab_x = 0;
+            grab_y = 0;
         }
     }
     

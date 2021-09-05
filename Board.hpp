@@ -10,6 +10,22 @@ class Board
 {
 protected:
     Dice contents[NUMROW][NUMCOL] = {EMPTY};
+
+    /* Utility function to determine how many pieces are stored in 
+     * the hand. */
+    int count_hand(Dice * inarr)
+    {
+        int handsize = NUMCOL;
+        for (int pos = 0; pos < NUMCOL; pos++)
+        {
+            if (inarr[pos] == EMPTY)
+            {
+                handsize = pos;
+                break;
+            }
+        }
+        return handsize;
+    }
     
 public:
     Board()
@@ -60,16 +76,7 @@ public:
      * Returns true if the placement is valid, false otherwise */
     bool place(int col, int row, Dice * inarr)
     {
-        /* Count the number of items in the hand */
-        int handsize = NUMCOL;
-        for (int pos = 0; pos < NUMCOL; pos++)
-        {
-            if (inarr[pos] == EMPTY)
-            {
-                handsize = pos;
-                break;
-            }
-        }
+        int handsize = count_hand(inarr);
         
         /* Copy the data into the board, if the placement is valid */
         if (   contents[row][col] == EMPTY
@@ -89,6 +96,19 @@ public:
         else
         {
             return false;
+        }
+    }
+    
+    /* Unconditional version of place which is used to undo an unwanted
+     * grab. Be careful with use of this function! */
+    void put_back(int col, int row, Dice * inarr)
+    {
+        int handsize = count_hand(inarr);
+        
+        for (int pos = 0; pos <= handsize; pos++)
+        {
+            contents[row][col + pos] = inarr[pos];
+            inarr[pos] = EMPTY;
         }
     }
     

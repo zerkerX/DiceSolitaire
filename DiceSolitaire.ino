@@ -25,8 +25,6 @@ Hand hand;
 Board board;
 
 /* Primary TODO list:
- * - "Put back" support, to prevent getting stuck holding something
- *   with no moves.
  * - Collapsing properly sorted sets
  * - Shuffled initial state
  * - A main menu and means to exit back to it
@@ -52,6 +50,7 @@ void user_action()
     if (arduboy.justPressed(RIGHT_BUTTON)) hand.right();
 
     if (arduboy.justPressed(A_BUTTON)) hand.grab(board);
+    if (arduboy.justPressed(B_BUTTON)) hand.put_back(board);
 }
 
 
