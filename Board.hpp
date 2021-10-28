@@ -7,11 +7,13 @@
 
 #include <Sprites.h>
 #include "Dice.hpp"
+#include <string.h>
 
 class Board
 {
 protected:
     Dice contents[NUMROW][NUMCOL] = {EMPTY};
+    char buff[100];
 
     /* Utility function to determine how many pieces are stored in 
      * the hand. */
@@ -185,24 +187,54 @@ public:
                 value = contents[row][col];
                 if ((value == WHITE_6 || value == BLACK_6) && col < NUMCOL - 6)
                 {
+                    sprintf(buff, "CHK: %d x %d: %d\r\n", col, row, value);
+                    Serial.print(buff);
                     next_matches(row, col + 1, value);
                 }
             }
         }
     }
-    
+
+/* Debug Session:
+CHK: 0 x 2: 17
+NXT: 1 x 2: 16; CONT
+NXT: 2 x 2: 15; CONT
+NXT: 3 x 2: 14; CONT
+NXT: 4 x 2: 13; CONT
+NXT: 5 x 2: 12; CONT
+NXT: 6 x 2: 0; 
+
+CHK: 0 x 1: 6
+NXT: 1 x 1: 5; CONT
+NXT: 2 x 1: 4; CONT
+NXT: 3 x 1: 3; CONT
+NXT: 4 x 1: 2; CONT
+NXT: 5 x 1: 1; CONT
+NXT: 6 x 1: 0; 
+*/
+
     void next_matches(int row, int col, Dice prev_value)
     {
         Dice value;
         value = contents[row][col];
+
+        sprintf(buff, "NXT: %d x %d: %d; ", col, row, value);
+        Serial.print(buff);
+        
         if (dice_end_stack(value) == prev_value)
         {
+            Serial.print("END\r\n");
             delete_pos(row, col);
             contents[row][col - 1] = dice_get_end_version(prev_value);
         }
         else if (dice_prev_stack(value) == prev_value)
         {
+            Serial.print("CONT\r\n");
             next_matches(row, col + 1, value);
+        }
+        else
+        {
+            Serial.print("\r\n");
         }
     }
 };

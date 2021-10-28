@@ -36,8 +36,10 @@ Board board;
 
 void setup() {
   arduboy.begin();
+  Serial.begin(9600);
 
   //~ arduboy.setFrameRate(15);
+  
 }
 
 void user_action()
