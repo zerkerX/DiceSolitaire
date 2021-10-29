@@ -197,7 +197,7 @@ public:
         value = contents[row][col];
         if (dice_end_stack(value) == prev_value)
         {
-            delete_pos(row, col);
+            delete_pos(col, row);
             contents[row][col - 1] = dice_get_end_version(prev_value);
         }
         else if (dice_prev_stack(value) == prev_value)
