@@ -64,10 +64,10 @@ Dice dice_end_stack(Dice item)
         case BLACK_COL_4:
         case BLACK_COL_5:
         case BLACK_COL_6:
-            return item - 6;
+            return item - 4;
         case WHITE_1:
         case BLACK_1:
-            return item - 1;
+            return item + 1;
         default:
             return INVALID;
     }
