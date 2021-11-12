@@ -84,10 +84,28 @@ public:
      * */
     void grab(int col, int row, Dice * outarr)
     {
+        /* Do a first pass to confirm there are no completed blocks
+         * in ths set. */
+        bool okay = true;
+        Dice item;
         for (int pos = 0; pos < NUMCOL && pos + col < NUMCOL; pos++)
         {
-            outarr[pos] = contents[row][col + pos];
-            contents[row][col + pos] = EMPTY;
+            item = contents[row][col + pos];
+            if (   (item >= WHITE_COL_2 && item <= WHITE_COL_6)
+                || (item >= BLACK_COL_2 && item <= BLACK_COL_6))
+            {
+                okay = false;
+                break;
+            }
+        }
+
+        if (okay)
+        {
+            for (int pos = 0; pos < NUMCOL && pos + col < NUMCOL; pos++)
+            {
+                outarr[pos] = contents[row][col + pos];
+                contents[row][col + pos] = EMPTY;
+            }
         }
     }
 
