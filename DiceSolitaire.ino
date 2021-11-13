@@ -25,8 +25,8 @@ Hand hand;
 Board board;
 
 /* Primary TODO list:
- * - Collapsing properly sorted sets
- * - Shuffled initial state
+ * - Place on top of collapsed sets (or not? >:-) )
+ * - Make collapsed sets move to leftmost column?
  * - A main menu and means to exit back to it
  * - Recognize when puzzle is complete.
  * >> Minimum viable game!

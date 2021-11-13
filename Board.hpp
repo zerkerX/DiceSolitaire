@@ -6,6 +6,8 @@
 #include "whitecollapsed.h"
 
 #include <Sprites.h>
+#include <stdlib.h>
+#include <string.h>
 #include "Dice.hpp"
 
 class Board
@@ -45,10 +47,41 @@ protected:
 public:
     Board()
     {
-        for (int i = 0; i < 6; i++)
+        shuffle(46);
+    }
+
+    void shuffle(unsigned seed)
+    {
+        Dice deck[24], temp;
+        int i, a, b;
+
+        for (i = 0; i < 6; i++)
         {
-            contents[0][i] = WHITE_1 + i;
-            contents[1][i] = BLACK_1 + i;
+            deck[i] = WHITE_1 + i;
+            deck[i+6] = BLACK_1 + i;
+            deck[i+12] = WHITE_1 + i;
+            deck[i+18] = BLACK_1 + i;
+        }
+
+        srandom(seed);
+
+        /* Iteratively swap two positions 1000 times
+         * to shuffle the deck. */
+        for (i = 0; i < 1000; i++)
+        {
+            a = random() % 24;
+            b = random() % 24;
+
+            temp = deck[a];
+            deck[a] = deck[b];
+            deck[b] = temp;
+        }
+
+        /* Deal the shuffled deck out to the playfield now */
+        memset(contents, 0, sizeof(contents));
+        for (i = 0; i < 24; i++)
+        {
+            contents[i/5][i%5] = deck[i];
         }
     }
     
