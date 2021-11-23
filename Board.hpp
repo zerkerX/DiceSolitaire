@@ -234,9 +234,20 @@ public:
             for (int col = 0; col < NUMCOL; col++)
             {
                 value = contents[row][col];
+                /* When collapsing, start looking for more matches when
+                 * we see a 6 */
                 if ((value == WHITE_6 || value == BLACK_6) && col < NUMCOL - 6)
                 {
                     next_matches(row, col + 1, value);
+                }
+                /* If we see a fully-collapsed set, confirm it's in the
+                 * left-most column already. If not, move it! */
+                else if ((value == WHITE_COL_6 || value == BLACK_COL_6) && col > 0)
+                {
+                    for (int pos = col; pos > 0; pos--)
+                        contents[row][pos] = contents[row][pos-1];
+
+                    contents[row][0] = value;
                 }
             }
         }

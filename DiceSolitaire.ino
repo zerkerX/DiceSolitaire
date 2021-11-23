@@ -25,13 +25,22 @@ Hand hand;
 Board board;
 
 /* Primary TODO list:
- * - Place on top of collapsed sets (or not? >:-) )
- * - Make collapsed sets move to leftmost column?
+ * - Place on top of collapsed sets (or not? 😈)
+ * - Better source of randomness. Does Arduboy have analogue in we can sample
+ *   noise from?
  * - A main menu and means to exit back to it
  * - Recognize when puzzle is complete.
  * >> Minimum viable game!
  * - Fixed set of puzzles? Or maybe just choose number of dice sets?
- */ 
+ * - There will be a bug if two collapsed sets end up in the same column
+ *   (and aren't the same color themselves). Try to reproduce, then consider
+ *   if it's worth fixing. Can probably simplify to only check for two; a third
+ *   is VERY unlikely.
+ *
+ * Maybe list?
+ * - Consider allowing placement on top of collapsed sets. It seems a
+ *   good challenge without this, though.
+ */
 
 
 void setup() {

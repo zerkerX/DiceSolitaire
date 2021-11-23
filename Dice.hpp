@@ -8,22 +8,22 @@ enum Dice {
     WHITE_4,
     WHITE_5,
     WHITE_6,
-    WHITE_COL_2,
+    WHITE_COL_2, // First phase of collapsing
     WHITE_COL_3,
     WHITE_COL_4,
     WHITE_COL_5,
-    WHITE_COL_6,
+    WHITE_COL_6, // Completely collapsed
     BLACK_1,
     BLACK_2,
     BLACK_3,
     BLACK_4,
     BLACK_5,
     BLACK_6,
-    BLACK_COL_2,
+    BLACK_COL_2, // First phase of collapsing
     BLACK_COL_3,
     BLACK_COL_4,
     BLACK_COL_5,
-    BLACK_COL_6,
+    BLACK_COL_6, // Completely collapsed
     INVALID
 };
 
