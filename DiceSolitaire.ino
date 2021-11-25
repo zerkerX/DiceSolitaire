@@ -25,10 +25,8 @@ Hand hand;
 Board board;
 
 /* Primary TODO list:
- * - Place on top of collapsed sets (or not? 😈)
- * - Better source of randomness. Does Arduboy have analogue in we can sample
- *   noise from?
- * - A main menu and means to exit back to it
+ * - A main menu
+ * - In-game options to quit, restart or new puzzle
  * - Recognize when puzzle is complete.
  * >> Minimum viable game!
  * - Fixed set of puzzles? Or maybe just choose number of dice sets?
@@ -45,6 +43,7 @@ Board board;
 
 void setup() {
   arduboy.begin();
+  board.shuffle(arduboy.generateRandomSeed());
 
   //~ arduboy.setFrameRate(15);
 }

@@ -6,6 +6,7 @@
 #include "whitecollapsed.h"
 
 #include <Sprites.h>
+#include <Arduboy2.h>
 #include <stdlib.h>
 #include <string.h>
 #include "Dice.hpp"
@@ -14,6 +15,7 @@ class Board
 {
 protected:
     Dice contents[NUMROW][NUMCOL] = {EMPTY};
+    unsigned long last_seed = 0;
 
     /* Utility function to determine how many pieces are stored in 
      * the hand. */
@@ -47,10 +49,9 @@ protected:
 public:
     Board()
     {
-        shuffle(46);
     }
 
-    void shuffle(unsigned seed)
+    void shuffle(unsigned long seed)
     {
         Dice deck[24], temp;
         int i, a, b;
@@ -64,6 +65,7 @@ public:
         }
 
         srandom(seed);
+        last_seed = seed;
 
         /* Iteratively swap two positions 1000 times
          * to shuffle the deck. */
