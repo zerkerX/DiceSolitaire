@@ -18,7 +18,9 @@ along with DiceSolitaire.  If not, see <https://www.gnu.org/licenses/>.
 #include "Board.hpp"
 
 #include <Arduboy2.h>
+#include <Sprites.h>
 #include <string.h>
+#include "title.h"
 
 Arduboy2 arduboy;
 Hand hand;
@@ -40,12 +42,24 @@ Board board;
  *   good challenge without this, though.
  */
 
+bool menu = true;
 
 void setup() {
   arduboy.begin();
-  board.shuffle(arduboy.generateRandomSeed());
 
   //~ arduboy.setFrameRate(15);
+}
+
+void do_menu()
+{
+    Sprites::drawOverwrite(0, 0, title, 0);
+    arduboy.pollButtons();
+
+    if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON))
+    {
+        menu = false;
+        board.shuffle(arduboy.generateRandomSeed());
+    }
 }
 
 void user_action()
@@ -74,9 +88,16 @@ void loop() {
     if (!(arduboy.nextFrame()))
         return;
 
-    user_action();
-    hand.gravity(board);
-    board.check_matches();
-    draw_display();
+    if (menu)
+    {
+        do_menu();
+    }
+    else
+    {
+        user_action();
+        hand.gravity(board);
+        board.check_matches();
+        draw_display();
+    }
     arduboy.display();
 }
