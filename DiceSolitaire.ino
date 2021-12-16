@@ -27,15 +27,14 @@ Hand hand;
 Board board;
 
 /* Primary TODO list:
- * - A main menu
  * - In-game options to quit, restart or new puzzle
  * - Recognize when puzzle is complete.
+ * - Don't allow anything but 6 to be placed on blank space
+ * - There is a bug if two collapsed sets end up in the same column
+ *   (and aren't the same color themselves). Can probably simplify to only check
+ *   for two; a third is VERY unlikely.
  * >> Minimum viable game!
  * - Fixed set of puzzles? Or maybe just choose number of dice sets?
- * - There will be a bug if two collapsed sets end up in the same column
- *   (and aren't the same color themselves). Try to reproduce, then consider
- *   if it's worth fixing. Can probably simplify to only check for two; a third
- *   is VERY unlikely.
  *
  * Maybe list?
  * - Consider allowing placement on top of collapsed sets. It seems a
