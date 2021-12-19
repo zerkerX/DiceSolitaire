@@ -27,7 +27,6 @@ Hand hand;
 Board board;
 
 /* Primary TODO list:
- * - In-game options to quit, restart or new puzzle
  * - Recognize when puzzle is complete.
  * - Don't allow anything but 6 to be placed on blank space
  * - There is a bug if two collapsed sets end up in the same column
@@ -70,7 +69,25 @@ void user_action()
     if (arduboy.justPressed(LEFT_BUTTON)) hand.left();
     if (arduboy.justPressed(RIGHT_BUTTON)) hand.right();
 
-    if (arduboy.justPressed(A_BUTTON)) hand.grab(board);
+    if (arduboy.justPressed(A_BUTTON))
+    {
+        // Grab can also result in a menu option getting triggered
+        switch (hand.grab(board))
+        {
+            case RESTART_BOARD:
+                board.restart();
+                hand.reset_pos();
+                break;
+            case NEW_BOARD:
+                board.shuffle(arduboy.generateRandomSeed());
+                hand.reset_pos();
+                break;
+            case RETURN_TO_MENU:
+                menu = true;
+                hand.reset_pos();
+                break;
+        }
+    }
     if (arduboy.justPressed(B_BUTTON)) hand.put_back(board);
 }
 
@@ -94,9 +111,13 @@ void loop() {
     else
     {
         user_action();
-        hand.gravity(board);
-        board.check_matches();
-        draw_display();
+        // User action can result in going to menu
+        if (!menu)
+        {
+            hand.gravity(board);
+            board.check_matches();
+            draw_display();
+        }
     }
     arduboy.display();
 }

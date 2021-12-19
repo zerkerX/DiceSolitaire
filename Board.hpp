@@ -44,8 +44,6 @@ protected:
         contents[row][NUMCOL - 1] = EMPTY;
     }
     
-    /* TODO InsertPos function too */
-    
 public:
     Board()
     {
@@ -85,6 +83,16 @@ public:
         {
             contents[i/5][i%5] = deck[i];
         }
+    }
+
+    void shuffle()
+    {
+
+    }
+
+    void restart()
+    {
+        shuffle(last_seed);
     }
     
     void draw()

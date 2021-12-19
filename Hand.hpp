@@ -8,6 +8,17 @@
 
 #include <Sprites.h>
 
+/* Enum for tracking the result of menu operations that can result from
+ * in-game selection. */
+enum MenuAction
+{
+    NO_ACTION,
+    RESTART_BOARD,
+    NEW_BOARD,
+    RETURN_TO_MENU
+};
+
+
 class Hand
 {
 protected:
@@ -18,12 +29,25 @@ protected:
     
 public:
     Hand() {}
+
+    void reset_pos()
+    {
+        // This is expected to happen when selecting a menu option, so
+        // the hand should already be empty at that point
+        x = 0;
+        y = 0;
+    }
     
     void draw()
     {
         if (empty)
         {
-            Sprites::drawPlusMask(x * 12, y * 12, cursor, 0);
+            // "Empty" cursor is also allowed to move to the menu options.
+            // In that case, the normal cursor is not drawn
+            if (y < NUMROW)
+            {
+                Sprites::drawPlusMask(x * 12, y * 12, cursor, 0);
+            }
         }
         else
         {
@@ -43,9 +67,18 @@ public:
 
         // The hand routine also draws the menu at the bottom, since it tracks
         // that selection too
-        for (int item = 0; item < 3; item++)
+        for (int item = 0; item < NUMMENU; item++)
         {
-            Sprites::drawPlusMask(item * 40, 60, menuitems, item);
+            if (y == NUMROW && x == item)
+            {
+                // Selected items are drawn higher up (overlapping the board)
+                Sprites::drawPlusMask(item * 40, 56, menuitems, item);
+            }
+            else
+            {
+                Sprites::drawPlusMask(item * 40, 60, menuitems, item);
+            }
+
         }
     }
     
@@ -58,7 +91,15 @@ public:
     void down()
     {
         y++;
-        if (y > NUMROW - 1) y = NUMROW - 1;
+        if (empty)
+        {
+            // Empty cursor can move to the menu row
+            if (y > NUMROW) y = NUMROW;
+        }
+        else
+        {
+            if (y > NUMROW - 1) y = NUMROW - 1;
+        }
     }
     
     void left()
@@ -73,16 +114,37 @@ public:
         if (x > NUMCOL - 1) x = NUMCOL - 1;
     }
     
-    void grab(Board & board)
+    MenuAction grab(Board & board)
     {
+        MenuAction result = NO_ACTION;
         if (empty)
         {
-            board.grab(x, y, holding);
-            if (holding[0] != EMPTY)
+            // "Empty Grab" also can trigger when selecting a bottom menu
+            // option
+            if (y == NUMROW)
             {
-                grab_x = x;
-                grab_y = y;
-                empty = false;
+                switch (x)
+                {
+                    case 0:
+                        result = RESTART_BOARD;
+                        break;
+                    case 1:
+                        result = NEW_BOARD;
+                        break;
+                    case 2:
+                        result = RETURN_TO_MENU;
+                        break;
+                }
+            }
+            else
+            {
+                board.grab(x, y, holding);
+                if (holding[0] != EMPTY)
+                {
+                    grab_x = x;
+                    grab_y = y;
+                    empty = false;
+                }
             }
         }
         else
@@ -94,6 +156,7 @@ public:
                 grab_y = 0;
             }
         }
+        return result;
     }
     
     void put_back(Board & board)
@@ -114,7 +177,15 @@ public:
     {
         if (empty)
         {
-            x = board.gravity_grab(x, y);
+            if (y < NUMROW)
+            {
+                x = board.gravity_grab(x, y);
+            }
+            else
+            {
+                // Limit menu options explicitly, since they don't change
+                if (x > NUMMENU - 1) x = NUMMENU - 1;
+            }
         }
         else
         {
