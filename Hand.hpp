@@ -3,6 +3,7 @@
 #include "Board.hpp"
 
 #include "cursor.h"
+#include "menuitems.h"
 #include "limits.h"
 
 #include <Sprites.h>
@@ -38,6 +39,13 @@ public:
                             blackdice, value - BLACK_1);
             }
             Sprites::drawPlusMask(x * 12 + 4, y * 12, cursor, 0);
+        }
+
+        // The hand routine also draws the menu at the bottom, since it tracks
+        // that selection too
+        for (int item = 0; item < 3; item++)
+        {
+            Sprites::drawPlusMask(item * 40, 60, menuitems, item);
         }
     }
     
