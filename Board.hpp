@@ -251,8 +251,12 @@ public:
                     next_matches(row, col + 1, value);
                 }
                 /* If we see a fully-collapsed set, confirm it's in the
-                 * left-most column already. If not, move it! */
-                else if ((value == WHITE_COL_6 || value == BLACK_COL_6) && col > 0)
+                 * left-most column already. If not, move it!
+                 * Unless, naturally, there is another collapsed block
+                 * already beside it! */
+                else if ((value == WHITE_COL_6 || value == BLACK_COL_6) && col > 0
+                    && contents[row][col - 1] != WHITE_COL_6
+                    && contents[row][col - 1] != BLACK_COL_6)
                 {
                     for (int pos = col; pos > 0; pos--)
                         contents[row][pos] = contents[row][pos-1];

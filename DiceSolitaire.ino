@@ -28,16 +28,14 @@ Board board;
 
 /* Primary TODO list:
  * - Recognize when puzzle is complete.
- * - Don't allow anything but 6 to be placed on blank space
- * - There is a bug if two collapsed sets end up in the same column
- *   (and aren't the same color themselves). Can probably simplify to only check
- *   for two; a third is VERY unlikely.
  * >> Minimum viable game!
- * - Fixed set of puzzles? Or maybe just choose number of dice sets?
  *
- * Maybe list?
+ * Maybe list
+ * - Options to choose the number of dice sets?
+ * - Fixed puzzles that have known solutions?
  * - Consider allowing placement on top of collapsed sets. It seems a
  *   good challenge without this, though.
+ * - Don't allow anything but 6 to be placed on blank space. Or is this too hard?
  */
 
 bool menu = true;
