@@ -21,16 +21,13 @@ along with DiceSolitaire.  If not, see <https://www.gnu.org/licenses/>.
 #include <Sprites.h>
 #include <string.h>
 #include "title.h"
+#include "youwin.h"
 
 Arduboy2 arduboy;
 Hand hand;
 Board board;
 
-/* Primary TODO list:
- * - Recognize when puzzle is complete.
- * >> Minimum viable game!
- *
- * Maybe list
+/* Maybe list
  * - Options to choose the number of dice sets?
  * - Fixed puzzles that have known solutions?
  * - Consider allowing placement on top of collapsed sets. It seems a
@@ -95,6 +92,12 @@ void draw_display()
     arduboy.clear();
     board.draw();
     hand.draw();
+
+    // Won indicator will be drawn last when present
+    if (board.is_won())
+    {
+        Sprites::drawPlusMask(16, 16, youwin, 0);
+    }
 }
 
 /* Also reminder: F() macro is to convert string constant from flash */

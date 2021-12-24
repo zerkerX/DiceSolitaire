@@ -16,6 +16,7 @@ class Board
 protected:
     Dice contents[NUMROW][NUMCOL] = {EMPTY};
     unsigned long last_seed = 0;
+    bool won = false;
 
     /* Utility function to determine how many pieces are stored in 
      * the hand. */
@@ -83,11 +84,8 @@ public:
         {
             contents[i/5][i%5] = deck[i];
         }
-    }
 
-    void shuffle()
-    {
-
+        won = false;
     }
 
     void restart()
@@ -238,6 +236,7 @@ public:
      * then down to a single square */
     void check_matches()
     {
+        int complete = 0;
         Dice value;
         for (int row = 0; row < NUMROW; row++)
         {
@@ -250,21 +249,28 @@ public:
                 {
                     next_matches(row, col + 1, value);
                 }
-                /* If we see a fully-collapsed set, confirm it's in the
-                 * left-most column already. If not, move it!
-                 * Unless, naturally, there is another collapsed block
-                 * already beside it! */
-                else if ((value == WHITE_COL_6 || value == BLACK_COL_6) && col > 0
-                    && contents[row][col - 1] != WHITE_COL_6
-                    && contents[row][col - 1] != BLACK_COL_6)
+                else if (value == WHITE_COL_6 || value == BLACK_COL_6)
                 {
-                    for (int pos = col; pos > 0; pos--)
-                        contents[row][pos] = contents[row][pos-1];
+                    complete ++;
 
-                    contents[row][0] = value;
+                    /* If we see a fully-collapsed set, confirm it's in the
+                     * left-most column already. If not, move it!
+                     * Unless, naturally, there is another collapsed block
+                     * already beside it! */
+                    if (col > 0
+                        && contents[row][col - 1] != WHITE_COL_6
+                        && contents[row][col - 1] != BLACK_COL_6)
+                    {
+                        for (int pos = col; pos > 0; pos--)
+                            contents[row][pos] = contents[row][pos-1];
+
+                        contents[row][0] = value;
+                    }
                 }
             }
         }
+
+        won = (complete == 4);
     }
     
     void next_matches(int row, int col, Dice prev_value)
@@ -280,5 +286,10 @@ public:
         {
             next_matches(row, col + 1, value);
         }
+    }
+
+    bool is_won()
+    {
+        return won;
     }
 };
