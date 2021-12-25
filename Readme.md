@@ -2,8 +2,12 @@ Dice Solitaire is a simple solitare game for the [Arduboy].
 To install on the Arduboy, simply load ``DiceSolitaire.ino`` in the
 [Arduino IDE][arduino] and load to the Arduboy per normal.
 
+Hex files are also included with the release tags, which
+can be used with the [ProjectABE] emulator, or other tools.
+
 [Arduboy]: https://www.arduboy.com/
 [arduino]: https://www.arduino.cc/en/software
+[ProjectABE]: https://github.com/felipemanga/ProjectABE
 
 # How to Play
 
